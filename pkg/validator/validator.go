@@ -10,8 +10,8 @@ import (
 
 //Validator validator wrapper struct for validator.v9 Validate and universal-translator
 type Validator struct {
-	validate *validator.Validate
-	trans    ut.Translator
+	Validate *validator.Validate
+	Trans    ut.Translator
 }
 
 //New create validator with default translation
@@ -23,8 +23,8 @@ func New() *Validator {
 	trans, _ := uni.GetTranslator("en")
 
 	v := &Validator{
-		validate: validate,
-		trans:    trans,
+		Validate: validate,
+		Trans:    trans,
 	}
 
 	v.RegisterTranslation(map[string]string{
@@ -36,13 +36,13 @@ func New() *Validator {
 
 //ValidateStruct validate struct and translate
 func (v *Validator) ValidateStruct(s interface{}) error {
-	err := v.validate.Struct(s)
+	err := v.Validate.Struct(s)
 
 	if err == nil {
 		return nil
 	}
 
-	messages := err.(validator.ValidationErrors).Translate(v.trans)
+	messages := err.(validator.ValidationErrors).Translate(v.Trans)
 	return &validatorError{
 		messages: messages,
 	}
