@@ -1,7 +1,7 @@
 package validator
 
 import (
-	"fmt"
+	"encoding/json"
 
 	en "github.com/go-playground/locales/en_US"
 	ut "github.com/go-playground/universal-translator"
@@ -20,31 +20,25 @@ func New() *Validator {
 	uni := ut.New(eng, eng)
 	trans, _ := uni.GetTranslator("en")
 
-	RegisterTranslation(validate, trans, "required", "{field} is required")
-
-	return &Validator{
+	v := &Validator{
 		validate: validate,
 		trans:    trans,
 	}
+
+	v.RegisterTranslation(map[string]string{
+		"required": "{field} is required",
+	})
+
+	return v
 }
 
 type validatorError struct {
-	errors []string
+	messages validator.ValidationErrorsTranslations
 }
 
 func (e validatorError) Error() string {
-	if len(e.errors) == 1 {
-		return e.errors[0]
-	}
-
-	result := ""
-	for _, err := range e.errors {
-		if result != "" {
-			result += ","
-		}
-		result += fmt.Sprintf(`"%s"`, err)
-	}
-	return result
+	s, _ := json.Marshal(e.messages)
+	return string(s)
 }
 
 func (v *Validator) ValidateStruct(s interface{}) error {
@@ -55,13 +49,7 @@ func (v *Validator) ValidateStruct(s interface{}) error {
 	}
 
 	messages := err.(validator.ValidationErrors).Translate(v.trans)
-
-	var errors []string
-	for _, message := range messages {
-		errors = append(errors, message)
-	}
-
 	return &validatorError{
-		errors: errors,
+		messages: messages,
 	}
 }

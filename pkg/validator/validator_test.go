@@ -1,24 +1,48 @@
 package validator_test
 
 import (
+	"encoding/json"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/payfazz/go-validator/pkg/validator"
 )
 
-type TestStruct struct {
-	Foo string `validate:"required"`
+type TestValidateRequiredStruct struct {
+	Foo string    `validate:"required"`
+	Bar uuid.UUID `validate:"required"`
 }
 
 func TestValidateRequired(t *testing.T) {
 	val := validator.New()
 
-	obj := &TestStruct{}
+	obj := &TestValidateRequiredStruct{
+		Foo: "123",
+	}
 
 	err := val.ValidateStruct(obj)
 
-	if err.Error() != "Foo is required" {
+	var data map[string]string
+	json.Unmarshal([]byte(err.Error()), &data)
+
+	if data["TestValidateRequiredStruct.Bar"] != "Bar is required" {
 		t.Log(err.Error())
 		t.Error("validate required failed")
+	}
+}
+
+func TestValidateRequired3(t *testing.T) {
+	val := validator.New()
+
+	id, _ := uuid.Parse("1423ee2f-0f83-4693-a617-e06cb007b35e")
+	obj := &TestValidateRequiredStruct{
+		Foo: "123",
+		Bar: id,
+	}
+
+	err := val.ValidateStruct(obj)
+	if err != nil {
+		t.Log(err.Error())
+		t.Error("error must be nil")
 	}
 }

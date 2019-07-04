@@ -10,7 +10,19 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
-func RegisterTranslation(validate *validator.Validate, translator ut.Translator, tag string, translation string) {
+//Translation is key-value pair of tag and translation
+type Translation map[string]string
+
+func (val *Validator) RegisterTranslation(trans Translation) {
+	for k, v := range trans {
+		val.registerTranslation(k, v)
+	}
+}
+
+func (val *Validator) registerTranslation(tag string, translation string) {
+	validate := val.validate
+	translator := val.trans
+
 	tags, translation := getAndReplaceTranslationKeywords(translation)
 
 	err := validate.RegisterTranslation(tag,
@@ -22,10 +34,7 @@ func RegisterTranslation(validate *validator.Validate, translator ut.Translator,
 			return
 		},
 		func(ut ut.Translator, fe validator.FieldError) string {
-			t, err := ut.T(fe.Tag(), getParamByTags(tags, fe)...)
-			if err != nil {
-				return fe.(error).Error()
-			}
+			t, _ := ut.T(fe.Tag(), getParamByTags(tags, fe)...)
 			return t
 		},
 	)
