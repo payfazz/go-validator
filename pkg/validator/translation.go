@@ -13,6 +13,7 @@ import (
 //Translation is key-value pair of tag and translation
 type Translation map[string]string
 
+//RegisterTranslation register translation with key-value pair of tag and translation string
 func (val *Validator) RegisterTranslation(trans Translation) {
 	for k, v := range trans {
 		val.registerTranslation(k, v)
