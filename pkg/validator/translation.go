@@ -21,8 +21,8 @@ func (val *Validator) RegisterTranslation(trans Translation) {
 }
 
 func (val *Validator) registerTranslation(tag string, translation string) {
-	validate := val.validate
-	translator := val.trans
+	validate := val.Validate
+	translator := val.Trans
 
 	tags, translation := getAndReplaceTranslationKeywords(translation)
 
@@ -103,6 +103,42 @@ func getAndReplaceTranslationKeywords(s string) (tags []string, replaced string)
 		func(s string) string {
 			i++
 			return fmt.Sprintf("{%d}", i)
+		},
+	)
+
+	return
+}
+
+func getAndReplaceTranslationKeywordsSprintf(s string) (tags []string, replaced string) {
+	keywords := []string{
+		"tag",
+		"actualTag",
+		"namespace",
+		"structNamespace",
+		"field",
+		"structField",
+		"value",
+		"param",
+	}
+
+	regexString := ""
+	for _, keyword := range keywords {
+		if regexString != "" {
+			regexString += "|"
+		}
+		regexString += "{" + keyword + "}"
+	}
+
+	re := regexp.MustCompile(regexString)
+	tags = re.FindAllString(s, -1)
+	for i := range tags {
+		tags[i] = strings.ReplaceAll(tags[i], "{", "")
+		tags[i] = strings.ReplaceAll(tags[i], "}", "")
+	}
+
+	replaced = re.ReplaceAllStringFunc(s,
+		func(s string) string {
+			return fmt.Sprintf("%%s")
 		},
 	)
 

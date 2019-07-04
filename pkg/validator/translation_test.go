@@ -62,6 +62,8 @@ func TestTranslationPanic2(t *testing.T) {
 type TestTagStruct struct {
 	A string `validate:"min=5"`
 	B string `validate:"iscolor"`
+	C string `validate:"min=3"`
+	D string `validate:"min=13"`
 }
 
 func TestTag(t *testing.T) {
@@ -94,11 +96,12 @@ func TestTranslateField(t *testing.T) {
 
 	custom := map[string]string{
 		"A.min": "{field} minimal {param}!",
+		"C.min": "{field} length please at least {param}!",
 	}
 
 	val := validator.New()
 
-	err := val.WithCustomFieldMessage(custom).ValidateStruct(obj)
+	err := val.WithCustomFieldMessages(custom).ValidateStruct(obj)
 
 	var data map[string]string
 	json.Unmarshal([]byte(err.Error()), &data)
