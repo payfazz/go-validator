@@ -29,8 +29,8 @@ func New() *Validator {
 
 	v.RegisterTranslation(map[string]string{
 		"required": "{field} is required",
-		"min":      "{field} must be minimal {param}",
-		"max":      "{field} must be maximal {param}",
+		"min":      "{field} min {param}",
+		"max":      "{field} max {param}",
 	})
 
 	return v

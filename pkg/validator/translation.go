@@ -14,6 +14,7 @@ import (
 type Translation map[string]string
 
 //RegisterTranslation register translation with key-value pair of tag and translation string
+//this method is not thread-safe it is intended that these all be registered prior to any validation
 func (val *Validator) RegisterTranslation(trans Translation) {
 	for k, v := range trans {
 		val.registerTranslation(k, v)
@@ -62,7 +63,24 @@ func getParamByTags(tags []string, fe validator.FieldError) []string {
 		case "structField":
 			result = append(result, fe.StructField())
 		case "value":
-			result = append(result, reflect.ValueOf(fe.Value()).String())
+			val := reflect.ValueOf(fe.Value())
+			typ := val.Type().Name()
+			var s string
+			switch typ {
+			case "float32":
+				fallthrough
+			case "float64":
+				s = fmt.Sprintf("%.2f", val.Float())
+			case "int":
+				fallthrough
+			case "int32":
+				fallthrough
+			case "int64":
+				s = fmt.Sprintf("%d", val.Int())
+			default:
+				s = val.String()
+			}
+			result = append(result, s)
 		case "param":
 			result = append(result, fe.Param())
 		}
