@@ -90,24 +90,3 @@ func TestTag(t *testing.T) {
 		t.Error("wrong translation on iscolor")
 	}
 }
-
-func TestTranslateField(t *testing.T) {
-	obj := &TestTagStruct{}
-
-	custom := map[string]string{
-		"A.min": "{field} minimal {param}!",
-		"C.min": "{field} length please at least {param}!",
-	}
-
-	val := validator.New()
-
-	err := val.WithCustomFieldMessages(custom).ValidateStruct(obj)
-
-	var data map[string]string
-	json.Unmarshal([]byte(err.Error()), &data)
-
-	if data["TestTagStruct.A"] != "A minimal 5!" {
-		t.Log(err)
-		t.Error("wrong custom field translation")
-	}
-}
