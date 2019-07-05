@@ -7,12 +7,23 @@ import (
 	"github.com/payfazz/go-validator/pkg/validator"
 )
 
+type TestTranslateFieldStruct struct {
+	A       string  `validate:"min=5"`
+	B       string  `validate:"iscolor"`
+	C       string  `validate:"min=3"`
+	D       string  `validate:"min=13"`
+	Float32 float32 `validate:"min=100"`
+	Int     int     `validate:"min=100"`
+}
+
 func TestTranslateField(t *testing.T) {
-	obj := &TestTagStruct{}
+	obj := &TestTranslateFieldStruct{}
 
 	custom := map[string]string{
-		"A.min": "{field} minimal {param}!",
-		"C.min": "{field} length please at least {param}!",
+		"A.min":       "{field} minimal {param}!",
+		"C.min":       "{field} length please at least {param}!",
+		"Float32.min": "your value {value} is invalid!",
+		"Int.min":     "your value {value} is invalid!",
 	}
 
 	val := validator.New()
@@ -22,7 +33,7 @@ func TestTranslateField(t *testing.T) {
 	var data map[string]string
 	json.Unmarshal([]byte(err.Error()), &data)
 
-	if data["TestTagStruct.A"] != "A minimal 5!" {
+	if data["TestTranslateFieldStruct.A"] != "A minimal 5!" {
 		t.Log(err)
 		t.Error("wrong custom field translation")
 	}
@@ -30,7 +41,7 @@ func TestTranslateField(t *testing.T) {
 	err = val.ValidateStruct(obj)
 	json.Unmarshal([]byte(err.Error()), &data)
 
-	if data["TestTagStruct.A"] != "A must be minimal 5" {
+	if data["TestTranslateFieldStruct.A"] != "A min 5" {
 		t.Log(err)
 		t.Error("a")
 	}
