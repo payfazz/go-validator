@@ -20,7 +20,7 @@ err := validate.ValidateStruct(product)
 fmt.Println(err)
 ```
 
-Override global default translation:
+Override global default messages:
 ```
 validate := validator.New()
 
@@ -29,10 +29,10 @@ customMessages := map[string]string{
 	"min":      "{field} minimal {param}, your value is '{value}'",
 	"max":      "{field} maximal {param}, your value is '{value}'",
 }
-validate.RegisterTranslation(customMessages)
+validate.RegisterMessages(customMessages)
 ```
 
-Override field-level translation:
+Override field-level messages:
 ```
 validate := validator.New()
 

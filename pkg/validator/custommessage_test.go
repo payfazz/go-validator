@@ -7,43 +7,86 @@ import (
 	"github.com/payfazz/go-validator/pkg/validator"
 )
 
-type TestTranslateFieldStruct struct {
-	A       string  `validate:"min=5"`
-	B       string  `validate:"iscolor"`
-	C       string  `validate:"min=3"`
-	D       string  `validate:"min=13"`
-	Float32 float32 `validate:"min=100"`
-	Int     int     `validate:"min=100"`
+type TestMessageStruct struct {
+	Number int `validate:"min=5,max=12"`
 }
 
-func TestTranslateField(t *testing.T) {
-	obj := &TestTranslateFieldStruct{}
+func TestMessage(t *testing.T) {
+	val := validator.New()
+	val.RegisterMessages(map[string]string{
+		"min": "{field} is not valid, min: {param}",
+		"max": "{field} is not valid, max: {param}",
+	})
 
-	custom := map[string]string{
-		"A.min":       "{field} minimal {param}!",
-		"C.min":       "{field} length please at least {param}!",
-		"Float32.min": "your value {value} is invalid!",
-		"Int.min":     "your value {value} is invalid!",
+	obj := &TestMessageStruct{
+		Number: 123,
 	}
 
-	val := validator.New()
-
-	err := val.WithCustomFieldMessages(custom).ValidateStruct(obj)
+	err := val.ValidateStruct(obj)
 
 	var data map[string]string
 	json.Unmarshal([]byte(err.Error()), &data)
 
-	if data["TestTranslateFieldStruct.A"] != "A minimal 5!" {
-		t.Log(err)
-		t.Error("wrong custom field translation")
+	if data["TestMessageStruct.Number"] != "Number is not valid, max: 12" {
+		t.Log(data)
+		t.Error("validation translation failed")
 	}
+}
 
-	err = val.ValidateStruct(obj)
+func TestMessagePanic(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Error("must panic")
+		}
+	}()
+
+	val := validator.New()
+	val.RegisterMessages(map[string]string{
+		"abc": "{1} is not valid, min: {3}",
+	})
+}
+
+func TestMessagePanic2(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Error("must panic")
+		}
+	}()
+
+	val := validator.New()
+	val.RegisterMessages(map[string]string{
+		"abc": "{1} is not valid, min: {3}",
+	})
+}
+
+type TestTagStruct struct {
+	A string `validate:"min=5"`
+	B string `validate:"iscolor"`
+	C string `validate:"min=3"`
+	D string `validate:"min=13"`
+}
+
+func TestTag(t *testing.T) {
+	obj := &TestTagStruct{}
+
+	val := validator.New()
+	val.RegisterMessages(map[string]string{
+		"min":     "{tag} {actualTag} {namespace} {structNamespace} {field} {structField} {value} {param}",
+		"iscolor": "{tag} {actualTag} {namespace} {structNamespace} {field} {structField} {value} {param}",
+	})
+
+	err := val.ValidateStruct(obj)
+
+	var data map[string]string
 	json.Unmarshal([]byte(err.Error()), &data)
 
-	if data["TestTranslateFieldStruct.A"] != "A min 5" {
+	if data["TestTagStruct.A"] != "min min TestTagStruct.A TestTagStruct.A A A  5" {
 		t.Log(err)
-		t.Error("a")
+		t.Error("wrong translation on min")
 	}
 
+	if data["TestTagStruct.B"] != "iscolor hexcolor|rgb|rgba|hsl|hsla TestTagStruct.B TestTagStruct.B B B  " {
+		t.Log(err)
+		t.Error("wrong translation on iscolor")
+	}
 }

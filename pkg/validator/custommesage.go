@@ -10,22 +10,22 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
-//Translation is key-value pair of tag and translation
-type Translation map[string]string
+//Message is key-value pair of tag and translation
+type Messages map[string]string
 
-//RegisterTranslation register translation with key-value pair of tag and translation string
+//RegisterMessages register translation with key-value pair of tag and translation string
 //this method is not thread-safe it is intended that these all be registered prior to any validation
-func (val *Validator) RegisterTranslation(trans Translation) {
+func (val *Validator) RegisterMessages(trans Messages) {
 	for k, v := range trans {
-		val.registerTranslation(k, v)
+		val.registerMessage(k, v)
 	}
 }
 
-func (val *Validator) registerTranslation(tag string, translation string) {
+func (val *Validator) registerMessage(tag string, translation string) {
 	validate := val.Validate
 	translator := val.Trans
 
-	tags, translation := getAndReplaceTranslationKeywords(translation)
+	tags, translation := getAndReplaceMessageKeywords(translation)
 
 	err := validate.RegisterTranslation(tag,
 		translator,
@@ -89,7 +89,7 @@ func getParamByTags(tags []string, fe validator.FieldError) []string {
 	return result
 }
 
-func getAndReplaceTranslationKeywords(s string) (tags []string, replaced string) {
+func getAndReplaceMessageKeywords(s string) (tags []string, replaced string) {
 	keywords := []string{
 		"tag",
 		"actualTag",
@@ -127,7 +127,7 @@ func getAndReplaceTranslationKeywords(s string) (tags []string, replaced string)
 	return
 }
 
-func getAndReplaceTranslationKeywordsSprintf(s string) (tags []string, replaced string) {
+func getAndReplaceMessageKeywordsSprintf(s string) (tags []string, replaced string) {
 	keywords := []string{
 		"tag",
 		"actualTag",

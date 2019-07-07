@@ -44,7 +44,7 @@ func (val *FieldCustom) ValidateStruct(obj interface{}) error {
 }
 
 func translate(fe validator.FieldError, format string) string {
-	tags, translation := getAndReplaceTranslationKeywordsSprintf(format)
+	tags, translation := getAndReplaceMessageKeywordsSprintf(format)
 
 	tagsVal := getParamByTags(tags, fe)
 
