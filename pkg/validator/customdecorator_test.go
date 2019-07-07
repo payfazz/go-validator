@@ -35,7 +35,7 @@ func TestTranslateField(t *testing.T) {
 
 	if data["TestTranslateFieldStruct.A"] != "A minimal 5!" {
 		t.Log(err)
-		t.Error("wrong custom field translation")
+		t.Error("wrong custom field message")
 	}
 
 	err = val.ValidateStruct(obj)
@@ -43,7 +43,18 @@ func TestTranslateField(t *testing.T) {
 
 	if data["TestTranslateFieldStruct.A"] != "A min 5" {
 		t.Log(err)
-		t.Error("a")
+		t.Error("wrong default field message")
 	}
 
+	custom = map[string]string{
+		"min": "you must input {field} with minimal {param}",
+	}
+
+	err = val.WithCustomFieldMessages(custom).ValidateStruct(obj)
+	json.Unmarshal([]byte(err.Error()), &data)
+
+	if data["TestTranslateFieldStruct.A"] == "A min 5" {
+		t.Log(err)
+		t.Error("wrong custom field message")
+	}
 }

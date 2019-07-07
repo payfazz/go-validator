@@ -20,7 +20,7 @@ err := validate.ValidateStruct(product)
 fmt.Println(err)
 ```
 
-Override global default messages:
+Override global default tag-level messages:
 ```
 validate := validator.New()
 
@@ -32,7 +32,7 @@ customMessages := map[string]string{
 validate.RegisterMessages(customMessages)
 ```
 
-Override field-level messages:
+Override for spesific validation execution field-level or tag-level messages with decorator:
 ```
 validate := validator.New()
 

@@ -10,10 +10,10 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
-//Message is key-value pair of tag and translation
+//Messages is key-value pair of tag and message
 type Messages map[string]string
 
-//RegisterMessages register translation with key-value pair of tag and translation string
+//RegisterMessages register translation with key-value pair of tag and message string
 //this method is not thread-safe it is intended that these all be registered prior to any validation
 func (val *Validator) RegisterMessages(trans Messages) {
 	for k, v := range trans {
