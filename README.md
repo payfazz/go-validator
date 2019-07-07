@@ -1,6 +1,6 @@
 # go-validator
 
-Golang struct tag validator based on [https://github.com/go-playground/validator]https://github.com/go-playground/validator.
+Golang struct tag validator based on [https://github.com/go-playground/validator](https://github.com/go-playground/validator).
 
 Struct with **validate** tag:
 ```
