@@ -6,7 +6,7 @@ import (
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
-//CustomFieldMessages key-value pair for tag and translation
+//CustomFieldMessages key-value pair for tag and message
 //Tag format: [struct field name].[validation tag]
 type CustomFieldMessages map[string]string
 
@@ -24,18 +24,26 @@ func (val *Validator) WithCustomFieldMessages(messages CustomFieldMessages) *Fie
 	}
 }
 
-//ValidateStruct validate struct and translate
+//ValidateStruct validate struct
 func (val *FieldCustom) ValidateStruct(obj interface{}) error {
 	verrs := val.Val.Validate.Struct(obj).(validator.ValidationErrors)
 
 	messages := make(map[string]string)
 	for _, verr := range verrs {
-		key := verr.Field() + "." + verr.Tag()
-		if translation, ok := val.Messages[key]; ok {
+		fieldAndTag := verr.Field() + "." + verr.Tag()
+		tag := verr.Tag()
+
+		if translation, ok := val.Messages[tag]; ok {
 			messages[verr.StructNamespace()] = translate(verr, translation)
-		} else {
-			messages[verr.StructNamespace()] = verr.Translate(val.Val.Trans)
+			continue
 		}
+
+		if translation, ok := val.Messages[fieldAndTag]; ok {
+			messages[verr.StructNamespace()] = translate(verr, translation)
+			continue
+		}
+
+		messages[verr.StructNamespace()] = verr.Translate(val.Val.Trans)
 	}
 
 	return &validatorError{

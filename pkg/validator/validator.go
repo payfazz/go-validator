@@ -14,7 +14,7 @@ type Validator struct {
 	Trans    ut.Translator
 }
 
-//New create validator with default translation
+//New create validator with default messages
 func New() *Validator {
 	validate := validator.New()
 
@@ -36,7 +36,7 @@ func New() *Validator {
 	return v
 }
 
-//ValidateStruct validate struct and translate
+//ValidateStruct validate struct
 func (v *Validator) ValidateStruct(s interface{}) error {
 	err := v.Validate.Struct(s)
 
