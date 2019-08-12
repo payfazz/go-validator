@@ -20,7 +20,7 @@ func main() {
 		"min":      "{field} minimal {param}, your value is '{value}'",
 		"max":      "{field} maximal {param}, your value is '{value}'",
 	}
-	validate.RegisterMessage(customMessages)
+	validate.RegisterMessages(customMessages)
 
 	product := &Product{}
 
