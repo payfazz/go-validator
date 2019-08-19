@@ -5,6 +5,7 @@ import (
 
 	en "github.com/go-playground/locales/en_US"
 	ut "github.com/go-playground/universal-translator"
+	customval "github.com/payfazz/go-validator/pkg/validator/validation"
 	validator "gopkg.in/go-playground/validator.v9"
 )
 
@@ -32,6 +33,8 @@ func New() *Validator {
 		"min":      "{field} min {param}",
 		"max":      "{field} max {param}",
 	})
+
+	validate.RegisterValidation("date_rfc3339", customval.RFC3339)
 
 	return v
 }
