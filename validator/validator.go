@@ -41,13 +41,22 @@ func New() *Validator {
 
 //ValidateStruct validate struct
 func (v *Validator) ValidateStruct(s interface{}) error {
-	err := v.Validate.Struct(s)
-
-	if err == nil {
+	if nil == s {
 		return nil
 	}
 
-	messages := err.(validator.ValidationErrors).Translate(v.Trans)
+	err := v.Validate.Struct(s)
+
+	if nil == err {
+		return nil
+	}
+
+	valerr, ok := err.(validator.ValidationErrors)
+	if !ok {
+		return err
+	}
+
+	messages := valerr.Translate(v.Trans)
 	return &validatorError{
 		messages: messages,
 	}

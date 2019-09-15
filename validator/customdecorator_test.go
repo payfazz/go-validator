@@ -15,6 +15,22 @@ type TestTranslateFieldStruct struct {
 	Int     int     `validate:"min=100"`
 }
 
+func TestCustomValidateOnNil(t *testing.T) {
+	val := validator.New()
+
+	custom := map[string]string{
+		"A.min":       "{field} minimal {param}!",
+		"C.min":       "{field} length please at least {param}!",
+		"Float32.min": "your value {value} is invalid!",
+		"Int.min":     "your value {value} is invalid!",
+	}
+
+	err := val.WithCustomFieldMessages(custom).ValidateStruct(nil)
+	if nil != err {
+		t.Error(err)
+	}
+}
+
 func TestTranslateField(t *testing.T) {
 	obj := &TestTranslateFieldStruct{}
 
@@ -28,9 +44,10 @@ func TestTranslateField(t *testing.T) {
 	val := validator.New()
 
 	err := val.WithCustomFieldMessages(custom).ValidateStruct(obj)
+	t.Logf("%#v", err)
 
 	var data map[string]string
-	json.Unmarshal([]byte(err.Error()), &data)
+	_ = json.Unmarshal([]byte(err.Error()), &data)
 
 	if data["TestTranslateFieldStruct.A"] != "A minimal 5!" {
 		t.Log(err)
@@ -38,7 +55,8 @@ func TestTranslateField(t *testing.T) {
 	}
 
 	err = val.ValidateStruct(obj)
-	json.Unmarshal([]byte(err.Error()), &data)
+	t.Logf("%#v", err)
+	_ = json.Unmarshal([]byte(err.Error()), &data)
 
 	if data["TestTranslateFieldStruct.A"] != "A min 5" {
 		t.Log(err)
@@ -50,7 +68,8 @@ func TestTranslateField(t *testing.T) {
 	}
 
 	err = val.WithCustomFieldMessages(custom).ValidateStruct(obj)
-	json.Unmarshal([]byte(err.Error()), &data)
+	t.Logf("%#v", err)
+	_ = json.Unmarshal([]byte(err.Error()), &data)
 
 	if data["TestTranslateFieldStruct.A"] == "A min 5" {
 		t.Log(err)

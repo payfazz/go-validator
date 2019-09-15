@@ -46,3 +46,12 @@ func TestValidateRequired3(t *testing.T) {
 		t.Error("error must be nil")
 	}
 }
+
+func TestValidateOnNil(t *testing.T) {
+	val := validator.New()
+
+	err := val.ValidateStruct(nil)
+	if err != nil {
+		t.Error(err.Error())
+	}
+}

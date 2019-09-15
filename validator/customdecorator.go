@@ -26,7 +26,15 @@ func (val *Validator) WithCustomFieldMessages(messages CustomFieldMessages) *Fie
 
 //ValidateStruct validate struct
 func (val *FieldCustom) ValidateStruct(obj interface{}) error {
-	verrs := val.Val.Validate.Struct(obj).(validator.ValidationErrors)
+	if nil == obj {
+		return nil
+	}
+
+	err := val.Val.Validate.Struct(obj)
+	verrs, ok := err.(validator.ValidationErrors)
+	if !ok {
+		return err
+	}
 
 	messages := make(map[string]string)
 	for _, verr := range verrs {
