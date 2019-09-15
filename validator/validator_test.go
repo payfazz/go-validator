@@ -3,14 +3,11 @@ package validator_test
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/payfazz/go-validator/validator"
-
 	validator_v9 "gopkg.in/go-playground/validator.v9"
-
 	"strings"
 	"testing"
-
-	"github.com/google/uuid"
 )
 
 type TestValidateRequiredStruct struct {
