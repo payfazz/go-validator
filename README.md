@@ -3,7 +3,7 @@
 Golang struct tag validator based on [https://github.com/go-playground/validator](https://github.com/go-playground/validator).
 
 Struct with **validate** tag:
-```
+```go
 type Product struct {
 	Name  string  `validate:"required,max=13"`
 	Price float64 `validate:"required,min=0"`
@@ -11,7 +11,7 @@ type Product struct {
 ```
 
 Executing validator:
-```
+```go
 val := validator.New()
 
 product := &Product{}
@@ -21,7 +21,7 @@ fmt.Println(err)
 ```
 
 Override global default tag-level messages:
-```
+```go
 val := validator.New()
 
 customMessages := map[string]string{
@@ -33,7 +33,7 @@ val.RegisterMessages(customMessages)
 ```
 
 Override for spesific validation execution field-level or tag-level messages with decorator:
-```
+```go
 val := validator.New()
 
 customMessages := map[string]string{
@@ -46,7 +46,7 @@ err := val.WithCustomFieldMessages(customMessages).ValidateStruct(product)
  ```
 
 Validator v9 methods still can be use from Validate object.
-```
+```go
 import (
    "github.com/payfazz/go-validator/validator"
     validator_v9 "gopkg.in/go-playground/validator.v9"
