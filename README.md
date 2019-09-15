@@ -12,29 +12,29 @@ type Product struct {
 
 Executing validator:
 ```
-validate := validator.New()
+val := validator.New()
 
 product := &Product{}
 
-err := validate.ValidateStruct(product)
+err := val.ValidateStruct(product)
 fmt.Println(err)
 ```
 
 Override global default tag-level messages:
 ```
-validate := validator.New()
+val := validator.New()
 
 customMessages := map[string]string{
 	"required": "{field} must be filled",
 	"min":      "{field} minimal {param}, your value is '{value}'",
 	"max":      "{field} maximal {param}, your value is '{value}'",
 }
-validate.RegisterMessages(customMessages)
+val.RegisterMessages(customMessages)
 ```
 
 Override for spesific validation execution field-level or tag-level messages with decorator:
 ```
-validate := validator.New()
+val := validator.New()
 
 customMessages := map[string]string{
 	"Name.required": "{field} must be filled",
@@ -42,5 +42,31 @@ customMessages := map[string]string{
 
 product := &Product{}
 
-err := validate.WithCustomFieldMessages(customMessages).ValidateStruct(product)
+err := val.WithCustomFieldMessages(customMessages).ValidateStruct(product)
  ```
+
+Validator v9 methods still can be used from Validate object.
+```
+import (
+	"github.com/payfazz/go-validator/validator"
+    validator_v9 "gopkg.in/go-playground/validator.v9"
+)
+
+type Test struct {
+    Image string `validate:"type=jpg|type=png"`
+}
+
+func main() {
+    val := validator.New()
+
+    _ = val.Validate.RegisterValidation("type", func(f validator_v9.FieldLevel) bool {
+        return strings.HasSuffix(f.Field().String(), f.Param())
+    })
+    
+    err := val.ValidateStruct(Test{
+        Image: "test.xyz",
+    })
+    
+    fmt.Println(err)
+}
+```
