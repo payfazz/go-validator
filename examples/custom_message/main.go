@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/payfazz/go-validator/pkg/validator"
+	"github.com/payfazz/go-validator/validator"
 )
 
 //Product dummy struct for example

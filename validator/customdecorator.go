@@ -3,7 +3,7 @@ package validator
 import (
 	"fmt"
 
-	validator "gopkg.in/go-playground/validator.v9"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 //CustomFieldMessages key-value pair for tag and message

@@ -2,10 +2,10 @@ package validator_test
 
 import (
 	"encoding/json"
+	"github.com/payfazz/go-validator/validator"
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/payfazz/go-validator/pkg/validator"
 )
 
 type TestValidateRequiredStruct struct {

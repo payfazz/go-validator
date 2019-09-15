@@ -2,9 +2,8 @@ package validator_test
 
 import (
 	"encoding/json"
+	"github.com/payfazz/go-validator/validator"
 	"testing"
-
-	"github.com/payfazz/go-validator/pkg/validator"
 )
 
 type TestTranslateFieldStruct struct {

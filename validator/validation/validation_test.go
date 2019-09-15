@@ -3,7 +3,7 @@ package validation_test
 import (
 	"testing"
 
-	"github.com/payfazz/go-validator/pkg/validator"
+	"github.com/payfazz/go-validator/validator"
 )
 
 var val *validator.Validator

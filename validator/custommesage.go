@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	ut "github.com/go-playground/universal-translator"
-	validator "gopkg.in/go-playground/validator.v9"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 //Messages is key-value pair of tag and message
