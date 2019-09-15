@@ -45,7 +45,7 @@ product := &Product{}
 err := val.WithCustomFieldMessages(customMessages).ValidateStruct(product)
  ```
 
-Validator v9 methods still can be used from Validate object.
+Validator v9 methods still can be use from Validate object.
 ```
 import (
 	"github.com/payfazz/go-validator/validator"
