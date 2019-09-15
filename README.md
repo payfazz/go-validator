@@ -48,8 +48,10 @@ err := val.WithCustomFieldMessages(customMessages).ValidateStruct(product)
 Validator v9 methods still can be use from Validate object.
 ```go
 import (
+   "fmt"
    "github.com/payfazz/go-validator/validator"
-    validator_v9 "gopkg.in/go-playground/validator.v9"
+   validator_v9 "gopkg.in/go-playground/validator.v9"
+   "strings"
 )
 
 type Test struct {
